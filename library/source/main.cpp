@@ -81,9 +81,9 @@ bool trainModel(ml::lin_reg::Fixed& model) noexcept
     const ml::Matrix1d trainIn{0.0, 0.1, 0.2, 0.3, 0.4, 
                                0.5, 0.6, 0.7, 0.8, 0.9, 
                                1.0, 1.1, 1.2, 1.3, 1.4};
-    const ml::Matrix2d trainOut{-50, -40, -30, -20, -10, 
-                                0, 10, 20, 30, 40, 50, 
-                                60, 70, 80, 90, 100};
+    const ml::Matrix2d trainOut{-50.0, -40.0, -30.0, -20.0, -10.0, 
+                                0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 
+                                60.0, 70.0, 80.0, 90.0, 100.0};
 
     // Train the model, return the result.
     return model.train(trainIn, trainOut, epochCount, learningRate);
