@@ -9,11 +9,8 @@
 
 namespace driver
 {
-namespace adc
-{
 /** ADC (A/D converter) interface. */
-class Interface;
-} // namespace adc
+namespace adc { class Interface; }
 
 namespace tempsensor
 {
@@ -28,7 +25,7 @@ public:
     /**
      * @brief Constructor.
      * 
-     * @param[in] pin Pin the temperature sensor is connected to. Must be an analog pin A0-A5.
+     * @param[in] pin Pin the temperature sensor is connected to.
      * @param[in] adc A/D converter for reading the input voltage from the sensor.
      */
     explicit Tmp36(uint8_t pin, adc::Interface& adc) noexcept;
