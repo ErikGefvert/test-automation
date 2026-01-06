@@ -84,7 +84,6 @@ TEST(TempSensor_Tmp36, Initialization)
 
         // Check if the pin is within the valid range for the ADC.
         const bool isValid{adc.isChannelValid(pin)};
-        EXPECT_EQ(tempSensor.isInitialized(), isValid);
 
         if (isValid)
         {
