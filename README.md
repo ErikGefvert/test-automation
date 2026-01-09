@@ -41,11 +41,29 @@ Först gången kommer du ombeds att lägga till användarnamn och lösenord, vil
 * Välj ett kort användarnamn, så som ditt förnamn.
 * Välj ett lämpligt lösenord och se till att spara detta på lämpligt sätt.
 
-Ladda ned nödvändiga paket för att kompilera kod, använda Git med mera:
+Installera nödvändiga paket för att kompilera kod, använda Git med mera:
 
 ```bash
 sudo apt -y update
-sudo apt -y install build-essential make git
+sudo apt -y install build-essential make git tree
+```
+
+### Installera Google Test
+
+Installera nödvändiga paket för Google Test:
+
+```bash
+sudo apt -y install libgtest-dev libgmock-dev cmake
+```
+
+Kompilera och installera sedan Google Test-biblioteken:
+
+```bash
+cd /usr/src/gtest
+sudo cmake .
+sudo make
+sudo mv lib/*.a /usr/lib
+cd ~
 ```
 
 ### Konfigurera SSH-nycklar för GitHub
