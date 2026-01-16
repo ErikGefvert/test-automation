@@ -15,7 +15,7 @@
 #ifdef TESTSUITE
 
 //! @todo Remove this #ifdef in lecture 3 to enable these tests.
-#ifdef LECTURE3
+
 
 //! @todo Implement tests according to project requirements.
 namespace driver
@@ -76,8 +76,10 @@ void printThread(serial::Interface& serial, const std::string& msg, bool& stop) 
     //! @todo Implement this function!
 
     // Transmit the entire string.
+    serial.printf(msg.c_str());
 
     // Set the stop flag to true to signal that transmission is complete.
+    stop = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -93,13 +95,19 @@ void readDataRegThread(const std::string& msg, const bool& stop) noexcept
         while (utils::read(UCSR0A, UDRE0) && !stop) { delay_us(TransmissionDelay_us); }
 
         // If stop flag is set, break out of the loop.
+        if(stop)
+        {
+            break;
+        }
 
         // Read the character from UDR0 and verify it matches the expected character.
-        
-        // Set UDRE0 to signal that the data has been read and the register is empty.
+        EXPECT_EQ(c, UDR0);
 
+
+        // Set UDRE0 to signal that the data has been read and the register is empty.
+        utils::set(UCSR0A, UDRE0);
         //! @todo Remove this line once the character 'c' is checked.
-        (void) (c);
+        
     }
 }
 
@@ -111,9 +119,20 @@ void readDataRegThread(const std::string& msg, const bool& stop) noexcept
 TEST(Serial_Atmega328p, Initialization)
 {
     //! @todo Test serial initialization:
+        serial::Interface& serial{initSerial()};
+
         //! - Verify that isInitialized() returns true.
+        EXPECT_TRUE(serial.isInitialized());
         //! - Verify that the driver can be enabled/disabled.
+        serial.setEnabled(true);
+        EXPECT_TRUE(serial.isEnabled());
+
+        serial.setEnabled(false);
+        EXPECT_FALSE(serial.isEnabled());
+
         //! - Check that baud rate can be read.
+        constexpr std::uint32_t expectedBaudRate{9600u};
+        EXPECT_EQ(serial.baudRate_bps(), expectedBaudRate);
 }
 
 /**
@@ -148,7 +167,6 @@ TEST(Serial_Atmega328p, Transmit)
 } // namespace
 } // namespace driver.
 
-//! @todo Remove this #endif in lecture 3 to enable these tests.
-#endif /** LECTURE3 */
+
 
 #endif /** TESTSUITE */
