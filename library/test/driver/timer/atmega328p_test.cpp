@@ -21,7 +21,7 @@ namespace
 constexpr std::uint8_t MaxTimerCount{3U};
 
 //! @todo Remove this #ifdef when starting to work on the callback test.
-#ifdef CALLBACK
+
 
 /** Flag to track if callback was invoked. */
 bool callbackInvoked{false};
@@ -41,7 +41,7 @@ constexpr std::uint32_t getMaxCount(const std::uint32_t timeout_ms) noexcept
 }
 
 //! @todo Remove this #endif when starting to work on the callback test.
-#endif /** CALLBACK */
+
 
 /**
  * @brief Timer initialization test.
@@ -94,15 +94,25 @@ TEST(Timer_Atmega328p, EnableDisable)
 {
     //! @todo Test timer enablement.
         // Create a timer with a timeout.
+        timer::Atmega328p timer0{100u};
         // Verify timer is not enabled initially (unless auto-started via the constructor).
+        EXPECT_FALSE(timer0.isEnabled());
         // Start the timer.
+        timer0.start();
         // Verify that the timer is enabled.
+        EXPECT_TRUE(timer0.isEnabled());
         // Stop the timer.
+        timer0.stop();
         // Verify that the timer is disabled.
+        EXPECT_FALSE(timer0.isEnabled());
         // Toggle the timer.
+        timer0.toggle();
         // Verify that the timer is enabled.
+        EXPECT_TRUE(timer0.isEnabled());
         // Toggle the timer once again.
+        timer0.toggle();
         // Verify that the timer is disabled.
+        EXPECT_FALSE(timer0.isEnabled());
 
     //! @note Once the above is working:
     //!       Feel free to try all three timers. When enabling/disabling, feel free to check both
@@ -120,13 +130,23 @@ TEST(Timer_Atmega328p, EnableDisable)
  */
 TEST(Timer_Atmega328p, Timeout)
 {
+    constexpr std::uint16_t timeout0{100u};
+    constexpr std::uint16_t timeout1{200u};
+    constexpr std::uint16_t timeout2{0u};
     //! @todo Test timer timeout:
+
         // Create a timer with an initial timeout of 100 ms.
+        timer::Atmega328p timer0{timeout0};
         // Verify timeout_ms() returns the correct value.
+        EXPECT_EQ(timer0.timeout_ms(), timeout0);
         // Change the timeout to 200 ms using setTimeout_ms().
+        timer0.setTimeout_ms(timeout1);
         // Verify the new timeout is returned by timeout_ms().
+        EXPECT_EQ(timer0.timeout_ms(), timeout1);
         // Change the timeout to 0 ms using setTimeout_ms().
+        timer0.setTimeout_ms(timeout2);
         // Verify that the timeout is unchanged (0 ms is an invalid timeout).
+        EXPECT_EQ(timer0.timeout_ms(), timeout1);
 }
 
 /**
@@ -136,14 +156,31 @@ TEST(Timer_Atmega328p, Timeout)
  */
 TEST(Timer_Atmega328p, Callback)
 {
-    //! @todo Test timer callback:
-        // Reset the callback flag (callbackInvoked) using resetCallbackFlag().
-        // Create a timer with a short timeout, such as 10 ms, and testCallback() as callback.
-        // Start the timer.
-        // Simulate timer interrupts by repeatedly calling handleCallback() on the timer.
-        // Call handleCallback() enough times to reach the timeout (getMaxCount()).
-        // Verify that callbackInvoked is true after timeout.
-        // Note: handleCallback() increments the timer and invokes the callback when timeout is reached.
+    constexpr std::uint16_t timeout1{10U};
+
+    // Reset the callback flag (callbackInvoked) using resetCallbackFlag().
+    resetCallbackFlag();
+
+    // Create a timer with a short timeout, such as 10 ms, and testCallback() as callback.
+    timer::Atmega328p timer0(timeout1, testCallback);
+
+    // Start the timer.
+    timer0.start();
+
+    // Calculate the number of times we have to call handleCallback to reach timeout.
+    constexpr std::uint32_t maxCount{getMaxCount(timeout1)};
+
+    // Simulate timer interrupts by repeatedly calling handleCallback() on the timer.
+    // Call handleCallback() enough times to reach the timeout (getMaxCount()).
+    for ( std::uint32_t i = 0 ; i < maxCount ; ++i )
+    {
+        timer0.handleCallback();
+    }
+
+    // Verify that callbackInvoked is true after timeout.
+    EXPECT_TRUE (callbackInvoked);
+
+    // Note: handleCallback() increments the timer and invokes the callback when timeout is reached.
 }
 
 /**

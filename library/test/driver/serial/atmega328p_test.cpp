@@ -102,6 +102,7 @@ void readDataRegThread(const std::string& msg, const bool& stop) noexcept
 
         // Read the character from UDR0 and verify it matches the expected character.
         EXPECT_EQ(c, static_cast<char>(UDR0));
+        
 
         // Set UDRE0 to signal that the data has been read and the register is empty.
         utils::set(UCSR0A, UDRE0);
