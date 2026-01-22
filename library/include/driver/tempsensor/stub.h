@@ -44,6 +44,12 @@ public:
      */
     int16_t read() const noexcept override { return myTemp; }
 
+    /**
+     * 
+     * 
+     */
+    void setTemp(int16_t sTemp) const noexcept { sTemp = myTemp; }
+
     Stub(const Stub&)            = delete; // No copy constructor.
     Stub(Stub&&)                 = delete; // No move constructor.
     Stub& operator=(const Stub&) = delete; // No copy assignment.

@@ -137,6 +137,7 @@ public:
     Logic& operator=(Logic&&)      = delete; // No move assignment.
 
 protected:
+    // This is accesible for out stub logic class (for testing).
     driver::serial::Interface& serial() noexcept { return mySerial; }
     driver::eeprom::Interface& eeprom() noexcept { return myEeprom; }
     driver::tempsensor::Interface& tempSensor() noexcept { return myTempSensor; }
