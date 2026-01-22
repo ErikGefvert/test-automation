@@ -14,8 +14,6 @@
 
 #ifdef TESTSUITE
 
-//! @todo Remove this #ifdef in lecture 3 to enable these tests.
-
 
 //! @todo Implement tests according to project requirements.
 namespace driver
@@ -106,7 +104,7 @@ void readDataRegThread(const std::string& msg, const bool& stop) noexcept
 
         // Set UDRE0 to signal that the data has been read and the register is empty.
         utils::set(UCSR0A, UDRE0);
-        //! @todo Remove this line once the character 'c' is checked.
+
         
     }
 }
